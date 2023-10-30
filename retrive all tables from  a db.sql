@@ -1,17 +1,18 @@
  ---retrive data from all the tables in a database at a time
  
- use ab   ---repalce ab with preferred database 
+ use northwind_database   ---repalce ab with preferred database 
  
  IF OBJECT_ID('tempdb..#tmp12') IS NOT NULL
     DROP TABLE #tmp12
 
 create table #tmp12(tablename nvarchar(333))
 insert into #tmp12 select name from sys.tables
+
 	declare @row int
 	declare @tablename varchar(300)
 	declare @sql nvarchar(max) 
 select @row=count(*) from #tmp12
---select * from #tmp12
+select * from #tmp12
 
 while @row >=1
 begin 

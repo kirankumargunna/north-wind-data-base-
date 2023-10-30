@@ -1,10 +1,15 @@
-/*
-** Copyright Microsoft, Inc. 1994 - 2000
-** All Rights Reserved.
-*/
+--create a new database
+use master
 
--- This script does not create a database.
--- Run this script in the database you want the objects to be created.
+if db_id ('northwind_database') is not null 
+begin 
+drop database northwind_database
+end
+ go
+create database northwind_database
+go
+use northwind_database
+
 -- Default schema is dbo.
 
 SET NOCOUNT ON
