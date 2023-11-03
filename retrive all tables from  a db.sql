@@ -46,4 +46,6 @@ select @name as tableName
  end 
  close c2
  deallocate c2*/
- 
+
+
+---------------------------------------------
