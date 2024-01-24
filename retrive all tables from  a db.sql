@@ -1,4 +1,4 @@
- ---retrive data from all the tables in a database at a time
+	 ---retrive data from all the tables in a database at a time
  
  use northwind_database   ---repalce ab with preferred database 
  
@@ -39,9 +39,9 @@ declare @sql nvarchar(max)
 fetch next from c2 into @name 
 while @@FETCH_STATUS=0
 begin 
-select @name as tableName 
  set @sql='select * from'+quotename( @name)
-  exec sp_executesql @sql
+ -- exec sp_executesql @sql
+ print @sql
   fetch next from c2 into @name 
  end 
  close c2
@@ -49,3 +49,30 @@ select @name as tableName
 
 
 ---------------------------------------------
+/***********approach3**********
+
+
+declare cur cursor for select TABLE_SCHEMA+'.'+TABLE_NAME as tablename from INFORMATION_SCHEMA.tables  
+												where table_type='base table' order by TABLE_SCHEMA
+
+open cur
+declare @name varchar(333)
+		,@sql nvarchar(max)
+		,@sql1 nvarchar(max)
+
+fetch next from cur into @name
+while @@FETCH_STATUS=0
+begin
+SET @sql = 'SELECT TOP 1 * FROM ' +   REPLACE(REPLACE(QUOTENAME(@name), '[', ''), ']', '')
+set @sql1='select * from '+  REPLACE(REPLACE(QUOTENAME(@name), '[', ''), ']', '')
+print @sql1
+
+--exec sp_executesql @sql
+--exec sp_executesql @@sql1
+fetch next from cur into @name
+end 
+
+close cur
+
+deallocate cur
+*****************************/+
