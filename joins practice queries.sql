@@ -57,34 +57,46 @@ from [Production].[Product] pro
 	 order by no_of_orders
 
 
+	 /***Retrieve a list of products that have no sales . Include product details and sales information.****/
+
+	 select * from Production.Product 
+	 select * from Sales.SalesOrderDetail 
+
+	 select p.ProductID,
+			p.name,
+			p.color,
+			p.safetystocklevel,
+			sod.SalesOrderID
+	 from [Production].[Product] p 
+	 left join [Sales].[SalesOrderDetail] sod on p.ProductID=sod.ProductID
+	 where sod.SalesOrderID is null
+
+	 /****query to find customers with a high lifetime value, considering the total amount spent on orders***/
+
+	 select * from Sales.Customer 
+	 select * from Sales.SalesOrderHeader 
+	 select * from Sales.SalesOrderDetail
+	-- select * from Person.Person
+	--select * from Person.BusinessEntityContact
 
 
 
+	 select top 100 c.CustomerID,
+			sum(sod.UnitPrice*sod.OrderQty) total_purchase_amount	
+	from [Sales].[Customer] c
+	 join [Sales].[SalesOrderHeader] soh on c.CustomerID=soh.CustomerID
+	 join [Sales].[SalesOrderDetail] sod on soh.SalesOrderID=sod.SalesOrderID
+	 group by c.CustomerID
+	 order by total_purchase_amount desc
+
+
+	 /******Identify employees who work in the same department but different locations. Display their details.****/
 
 
 
 
 
 	 /**********************************************
-
-
-Find Customers with No Orders:
-Identify customers who have not placed any orders. Display customer details along with the number of orders.
-
-List Products with No Sales in the Last Month:
-Retrieve a list of products that have not been sold in the last month. Include product details and sales information.
-
-Employee Hierarchy with Manager Names:
-Construct a query to display the organizational hierarchy of employees, including their manager names.
-
-Retrieve Customers with High Lifetime Value:
-Write a query to find customers with a high lifetime value, considering the total amount spent on orders.
-
-Top N Products by Sales Quantity:
-List the top N products based on sales quantity, including details about the product and the sales order.
-
-Find Employees in the Same Department but Different Locations:
-Identify employees who work in the same department but different locations. Display their details.
 
 Cumulative Sales by Product and Month:
 Create a query to calculate cumulative sales for each product over months, showing the running total.
