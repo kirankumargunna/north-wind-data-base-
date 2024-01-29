@@ -90,24 +90,28 @@ from [Production].[Product] pro
 	 order by total_purchase_amount desc
 
 
-	 /******Identify employees who work in the same department but different locations. Display their details.****/
 
 
 
 
 
-	 /**********************************************
-
-Cumulative Sales by Product and Month:
-Create a query to calculate cumulative sales for each product over months, showing the running total.
-
-Find Customers with Similar Purchase Patterns:
-Identify customers who have similar purchase patterns based on the products they have bought. Consider product categories and quantities.
-
-List Products with Price Changes:
-Retrieve a list of products that have experienced price changes, showing the old and new prices along with the change percentage.
-
-Employee Sales Performance Ranking:
-Create a query to rank employees based on their total sales performance. Display employee details and ranking.
-
-************************/
+  with cte as 
+	( 
+	  select 
+	  pc.Name as name,
+	  psc.name subcategory,
+	  sum(sod.OrderQty*sod.UnitPrice) as total_sale
+	  from [Production].[ProductCategory] pc
+	  join [Production].[ProductSubcategory] psc on pc.ProductCategoryID=psc.ProductCategoryID
+	  join [Production].[Product] p on psc.ProductSubcategoryID=p.ProductSubcategoryID
+	  join [Sales].[SalesOrderDetail] sod on p.ProductID=sod.ProductID
+	  group by pc.name, psc.name
+	)
+	  select 
+	  name as category,
+	  subcategory,
+	  total_sale,
+	  concat(ROUND(cast(total_sale as float)*100/sum(total_sale) over(),1),'%') as percentage
+	  from cte
+	  group by name,subcategory,total_sale
+	  order by category
