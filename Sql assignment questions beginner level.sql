@@ -160,5 +160,3 @@ having COUNT(o.OrderID)<=1
 	GROUP BY region 
 	ORDER BY COUNT(employeeid) DESC
 
-	--Q.18
-

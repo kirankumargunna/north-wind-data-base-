@@ -218,7 +218,7 @@ SELECT
 FROM 
     cte_numbers;
 
-	/********************/
+	/************************************fucntions***********************************************************/
 
 	-- Create a scalar function to calculate the sale amount of each product 
 alter FUNCTION dbo.totalsaleamount (
@@ -262,4 +262,70 @@ return
 select * from HumanResources.Employee where HireDate  between @startdate and @enddate
  
 SELECT * FROM employees_hiried('2010-01-01', '2011-12-31');
+
+-- Total number of distinct products
+SELECT 
+    CONCAT('Total number of distinct products: ', COUNT(DISTINCT ProductID)) AS total_no_of_products 
+FROM 
+    [Production].[Product];
+
+
+-- Average list price
+SELECT 
+    CONCAT('Average list price: $', FORMAT(AVG(ListPrice), 'N2')) AS average_list_price 
+FROM 
+    [Production].[Product];
+
+
+-- Maximum and minimum standard cost (excluding zero values)
+SELECT 
+    CONCAT('Maximum standard cost: $', FORMAT(MAX(StandardCost), 'N2'), ', Minimum standard cost: $', FORMAT(MIN(StandardCost), 'N2')) AS max_min_standard_cost
+FROM 
+    [Production].[Product] 
+WHERE 
+    StandardCost <> 0;
+
+
+-- Total sales amount in crores
+SELECT 
+    CONCAT('Total sales amount: ', FORMAT(SUM(OrderQty * UnitPrice) / 10000000, 'N2'), ' cr') AS total_sales_amount 
+FROM 
+    [Sales].[SalesOrderDetail];
+
+
+-- Average number of orders
+SELECT 
+    CONCAT('Average number of orders: ', CAST(AVG(OrderQty) AS VARCHAR), ' items') AS average_no_of_orders 
+FROM 
+    [Sales].[SalesOrderDetail];
+
+
+------retrive the employees with highest and lowest vacation hours 
+
+	select * from Person.Person
+	select * from HumanResources.Employee
+
+	 select concat(p.firstname,' ', p.MiddleName, ' ', p.LastName), 
+		    e.VacationHours  from [Person].[Person] p 
+		 join [HumanResources].[Employee]  e on p.BusinessEntityID=e.BusinessEntityID
+		 where e.VacationHours=(SELECT MAX(VacationHours) FROM [HumanResources].[Employee])
+		 or e.VacationHours=(SELECT min(VacationHours) FROM [HumanResources].[Employee] where VacationHours!=0)
+		 order by VacationHours
+			
+
+/*****Calculate the total order quantity for each product.********/
+	
+	select sod.ProductID,
+	       p.Name,
+		   sum(OrderQty) totalNoOfOrders
+		from [Sales].[SalesOrderDetail] sod 
+		left join [Production].[Product] p on sod.ProductID=p.ProductID 
+		group by sod.productid , p.Name
+		order by sum(orderqty ) desc
+
+
+
+----Find the average number of days between order date and ship date for each year.
+
+
 
