@@ -170,7 +170,7 @@ from [Production].[Product] pro
 	  name as category,
 	  subcategory,
 	  total_sale,
-	  concat(ROUND(cast(total_sale as float)*100/sum(total_sale) over(),1),'%') as percentage
+	  concat(ROUND(cast(total_sale as float)*100/sum(total_sale),1),'%') as percentage
 	  from cte
 	  group by name,subcategory,total_sale
 	  order by category
